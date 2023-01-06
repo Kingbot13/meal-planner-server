@@ -43,4 +43,17 @@ exports.signUpPost = [
             return res.status(200).json({ user });
           });
     }
-]
+];
+
+// handle log in
+exports.logInPost = (req, res, next) => {
+  passport.authenticate('local', {session: false}, (err, user, info) => {
+    if (err || !user) return res.status(400).json({message: "error logging in user", user: user});
+    req.login(user, {session: false}, (err) => {
+      if (err) res.send(err);
+      // generate signed token with user obj and return token
+      const token = jwt.sign(user.toJSON(), process.env.SECRET_KEY);
+      return res.status(200).json({user, token});
+    })
+  }), (req, res);
+}
