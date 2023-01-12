@@ -41,3 +41,11 @@ exports.recipeCreatePost = [
     );
   },
 ];
+
+// get all recipes
+exports.recipesGet = (req, res, next) => {
+  Recipe.find().sort({name: 'asc'}).exec((err, recipes) => {
+    if (err) return res.status(500).json({message: "could not get recipes"});
+    return res.status(200).json(recipes);
+  })
+}
