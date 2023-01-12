@@ -26,7 +26,7 @@ exports.recipeCreatePost = [
           .json({ message: "could not save recipe", theRecipe });
     });
     User.findByIdAndUpdate(
-      req.params.id,
+      req.params.userId,
       {
         $push: { recipes: recipe._id },
       },
@@ -53,10 +53,26 @@ exports.recipeUpdate = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (errors) return res.status(400).json({ message: "error validating" });
-    Recipe.findByIdAndUpdate(req.body.id, {ingredients: req.body.ingredients, name: req.body.name, steps: req.body.steps}, {}, (err, recipe) => {
+    Recipe.findByIdAndUpdate(req.params.recipeId, {ingredients: req.body.ingredients, name: req.body.name, steps: req.body.steps}, {}, (err, recipe) => {
       if (err) return res.status(500).json({recipe, message: "error updating recipe"});
       return res.status(200).json(recipe);
     });
   }
 
 ];
+
+// delete recipe
+exports.recipeDelete = (req, res, next) => {
+  Recipe.findByIdAndRemove(req.params.recipeId, {}, (err, recipe) => {
+    if (err) return res.status(500).json({message: "could not delete recipe"});
+    User.findById(req.params.userId).exec((err, user) => {
+      if (err) return res.status(500).json({message: "could not find user", user});
+      filteredRecipes = user.recipes.filter(recipe => recipe._id !== req.params.recipeId);
+      user.recipes = filteredRecipes;
+      user.save((err, user) => {
+        if (err) return res.status(500).json({message: "could not save user recipe update"});
+        return res.status(200).json({user, recipe});
+      });
+    });
+  });
+}
