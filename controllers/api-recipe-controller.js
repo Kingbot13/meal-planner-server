@@ -42,4 +42,21 @@ exports.recipeCreatePost = [
   },
 ];
 
+// update recipe
+exports.recipeUpdate = [
+  body("name", "name must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("ingredients", "ingrediants must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("steps", "steps must not be empty").trim().isLength({ min: 1 }).escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors) return res.status(400).json({ message: "error validating" });
+    Recipe.findByIdAndUpdate(req.body.id, {ingredients: req.body.ingredients, name: req.body.name, steps: req.body.steps}, {}, (err, recipe) => {
+      if (err) return res.status(500).json({recipe, message: "error updating recipe"});
+      return res.status(200).json(recipe);
+    });
+  }
 
+];
