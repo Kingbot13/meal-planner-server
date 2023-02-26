@@ -97,4 +97,18 @@ exports.recipeDelete = (req, res, next) => {
   });
 };
 
-// TODO: shuffle recipes randomly
+// shuffle recipes randomly
+exports.recipeShuffleGet = (req, res, next) => {
+  User.findById(req.params.userId).exec((err, user) => {
+    if (err) return res.status(500).json({ message: "error finding user" });
+    const shuffledRecipes = shuffle(user.recipes, user.recipes.length);
+    user.shuffledRecipes = shuffledRecipes;
+    user.save((err, theUser) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ message: "error saving changes to user", theUser });
+      return res.status(200).json({ theUser });
+    });
+  });
+};
