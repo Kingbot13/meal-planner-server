@@ -1,12 +1,12 @@
 require("dotenv").config();
-require('./passport');
+require("./passport");
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
-const cors = require('cors');
+const cors = require("cors");
 
 mongoose.connect(process.env.CONNECTION, {
   useUnifiedTopology: true,
@@ -50,6 +50,10 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });
 
 module.exports = app;
