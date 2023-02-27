@@ -2,7 +2,6 @@ const express = require("express");
 const apiController = require("../../controllers/api-controller");
 const apiUserController = require("../../controllers/api-user-controller");
 const apiRecipeController = require("../../controllers/api-recipe-controller");
-const { ResultWithContext } = require("express-validator/src/chain");
 
 const router = express.Router();
 
@@ -25,6 +24,21 @@ router.put(
 );
 
 // delete recipe
-router.delete("/users/:userId/recipes/:recipeId");
+router.delete(
+  "/users/:userId/recipes/:recipeId",
+  apiRecipeController.recipeDelete
+);
+
+// get randomly shuffled recipes
+router.get(
+  "users/:userId/recipes/shuffle",
+  apiRecipeController.recipeShuffleGet
+);
+
+// shuffle single recipe
+router.post(
+  "users/:userId/recipes/:recipeId/:itemIndex",
+  apiRecipeController.singleRecipeShufflePost
+);
 
 module.exports = router;
