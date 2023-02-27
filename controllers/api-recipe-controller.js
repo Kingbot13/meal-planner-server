@@ -112,3 +112,22 @@ exports.recipeShuffleGet = (req, res, next) => {
     });
   });
 };
+
+// shuffle one recipe randomly
+exports.singleRecipeShufflePost = (req, res, next) => {
+  User.findById(req.params.userId).exec((err, user) => {
+    if (err) return res.status(500).json({ message: "error finding user" });
+    // TODO: don't allow randomRecipe to be the same as recipe to be changed
+    const randomRecipe =
+      user.recipes[Math.floor(Math.random() * user.recipes.length)];
+    // find index and replace it with randomRecipe
+    user.shuffledRecipes[req.params.itemIndex] = randomRecipe;
+    user.save((err, theUser) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ message: "error saving changes to user", theUser });
+      res.status(200).json({ theUser });
+    });
+  });
+};
