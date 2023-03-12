@@ -41,6 +41,10 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
+// app.listen(3000, () => {
+//   console.log("Server running on port 3000");
+// });
+
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
@@ -50,10 +54,6 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
-});
-
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
 });
 
 module.exports = app;

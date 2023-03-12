@@ -6,7 +6,7 @@ const shuffle = require("../shuffle");
 // create new recipe
 exports.recipeCreatePost = [
   body("name", "name must not be empty").trim().isLength({ min: 1 }).escape(),
-  body("ingredients", "ingrediants must not be empty")
+  body("ingredients", "ingredients must not be empty")
     .trim()
     .isLength({ min: 1 })
     .escape(),
